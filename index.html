@@ -882,13 +882,23 @@ u.onend = () => { playing = false; vBtn.innerHTML = "<i class='fas fa-volume-mut
 u.onerror = () => { playing = false; vBtn.innerHTML = "<i class='fas fa-volume-mute'></i>"; };
 
 // Real Global Visitor Count (Footer)
-fetch("https://api.counterapi.dev/v1/ajayjames_portfolio/views/up")
-  .then(res => res.json())
-  .then(data => {
-    if(data && data.count) document.getElementById("v_count").innerText = data.count;
-    else document.getElementById("v_count").innerText = "1";
-  })
-  .catch(err => { document.getElementById("v_count").innerText = "Live"; });
+const SITE_KEY = "ajayjames-portfolio-global-12345"; 
+async function updateGlobalVisitorCount() {
+  try {
+    const response = await fetch(`https://countapi.mileshilliard.com/api/v1/hit/${SITE_KEY}`);
+    const data = await response.json();
+    
+    if (data.value !== undefined) {
+      document.getElementById("v_count").innerText = Number(data.value).toLocaleString();
+    } else {
+      document.getElementById("v_count").innerText = "Live";
+    }
+  } catch (error) {
+    console.error("Failed to update visitor count:", error);
+    document.getElementById("v_count").innerText = "Live";
+  }
+}
+updateGlobalVisitorCount();
 </script>
 </body>
 </html>
